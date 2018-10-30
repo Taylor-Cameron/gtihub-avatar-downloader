@@ -20,22 +20,25 @@ function getRepoContributors(repoOwner, repoName, callback) {
 }
 
 function downloadImageByURL(url, filePath) {
+  var destinationFile = filePath.split('/')[1];
   request.get(url)
          .on('error', function(error) {
            throw error;
          })
          .on('response', function(response) {
-           console.log('Response Status code: ' response.statusCode)
+           console.log('Response Status code: ' + response.statusCode)
          })
-         .pipe(fs.createWriteStream(filePath));
+    .pipe(fs.createWriteStream(destionationFile));
 }
 
 getRepoContributors("jquery", "jquery", function (error, result) {
   if(error) {
     throw error;
   }
-  for(var i = 0; i < result.length; i++) {
-    console.log(result[i].avatar_url);
-  }
+  result.forEach(function(item) {
+    var url = item.avatar_url;
+    var filePath = `.avatars/${item.login}`
+    downloadImageByURL(url, filePath);
+  })
 });
 
