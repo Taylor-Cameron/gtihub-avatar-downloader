@@ -29,25 +29,25 @@ function downloadImageByURL(url, filePath) {
            throw error;
          })
          .on('response', function(response) {
-           console.log('Response Status code: ' + response.statusCode)
+           console.log('Response Status code: ' + response.statusCode);
          })
-    .pipe(fs.createWriteStream(`./avatars/${destinationFile}`));
+         .pipe(fs.createWriteStream(`./avatars/${destinationFile}`));
 }
 
 // callback for saving images into individual files named by userName
 getRepoContributors(details[0], details[1], function (error, result) {
   if(!(details[0] && details[1])) {
     console.log('Please enter: <repoOwner> <repoName>. before proceeding');
-      return;
-    };
+    return;
+  }
   if(error) {
     throw error;
-    } else {
-      result.forEach(function(item) {
-        var url = item.avatar_url;
-        var filePath = `.avatars/${item.login}`
-        downloadImageByURL(url, filePath);
-      });
-    }
-  });
+  } else {
+    result.forEach(function(item) {
+      var url = item.avatar_url;
+      var filePath = `.avatars/${item.login}`;
+      downloadImageByURL(url, filePath);
+    });
+  }
+});
 
