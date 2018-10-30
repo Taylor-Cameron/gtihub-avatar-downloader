@@ -1,12 +1,15 @@
+// all requires
 var request = require('request');
 var passCode = require('./secrets.js');
 var fs = require('fs');
+var details = process.argv.splice(2, 2);
 
+//main function that processes API and converts JSON data
 console.log('Welcome to the Github Avatar Downloader!');
 
 function getRepoContributors(repoOwner, repoName, callback) {
   var options = {
-    url: 'https://api.github.com/repos/' + repoOwner + '/' + repoName + '/contributors',
+    url: 'https://api.github.com/repos/' + details[0] + '/' + details[1] + '/contributors',
     headers: {
       'User-Agent': 'request',
       'Authorization': passCode.GITHUB_TOKEN
@@ -18,7 +21,7 @@ function getRepoContributors(repoOwner, repoName, callback) {
     callback(error, result);
   });
 }
-
+//function to download images and acquire the file path
 function downloadImageByURL(url, filePath) {
   var destinationFile = filePath.split('/')[1];
   request.get(url)
@@ -28,13 +31,18 @@ function downloadImageByURL(url, filePath) {
          .on('response', function(response) {
            console.log('Response Status code: ' + response.statusCode)
          })
-    .pipe(fs.createWriteStream(destionationFile));
+    .pipe(fs.createWriteStream(destinationFile));
 }
-
-getRepoContributors("jquery", "jquery", function (error, result) {
+// callback for saving images into individual files named by userName
+getRepoContributors(details[0], details[1], function (error, result) {
+  if(!(details[0] && details[1])) {
+    console.log('Please enter: <repoOwner> <repoName>. before proceeding');
+    return;
+  };
   if(error) {
     throw error;
   }
+
   result.forEach(function(item) {
     var url = item.avatar_url;
     var filePath = `.avatars/${item.login}`
