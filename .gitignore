@@ -77,3 +77,5 @@ typings/
 
 #passcode file
 secrets.js
+
+DS_Store
