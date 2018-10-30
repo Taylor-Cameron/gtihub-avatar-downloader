@@ -8,6 +8,7 @@ Given a Github repository name and owner, download all the contributors' profile
 
 This program should be run from the the command line using the following:
 
-`node download_avatars.js jquery jquery`
+`node download_avatars.js <repoOwner> <repoName>`
 
-...(whatever else you'd like to include)
+as well you will need to include your own file `secrets.js` which takes a
+gitHub_token.
