@@ -11,8 +11,8 @@ function getRepoContributors(repoOwner, repoName, callback) {
   var options = {
     url: 'https://api.github.com/repos/' + details[0] + '/' + details[1] + '/contributors',
     headers: {
-      'User-Agent': 'request',
-      'Authorization': passCode.GITHUB_TOKEN
+      'User-Agent': 'Taylor-Cameron',
+      'Authorization': 'token ' + passCode.GITHUB_TOKEN
     },
   };
 
@@ -31,22 +31,23 @@ function downloadImageByURL(url, filePath) {
          .on('response', function(response) {
            console.log('Response Status code: ' + response.statusCode)
          })
-    .pipe(fs.createWriteStream(destinationFile));
+    .pipe(fs.createWriteStream(`./avatars/${destinationFile}`));
 }
+
 // callback for saving images into individual files named by userName
 getRepoContributors(details[0], details[1], function (error, result) {
   if(!(details[0] && details[1])) {
     console.log('Please enter: <repoOwner> <repoName>. before proceeding');
-    return;
-  };
+      return;
+    };
   if(error) {
     throw error;
-  }
-
-  result.forEach(function(item) {
-    var url = item.avatar_url;
-    var filePath = `.avatars/${item.login}`
-    downloadImageByURL(url, filePath);
-  })
-});
+    } else {
+      result.forEach(function(item) {
+        var url = item.avatar_url;
+        var filePath = `.avatars/${item.login}`
+        downloadImageByURL(url, filePath);
+      });
+    }
+  });
 
